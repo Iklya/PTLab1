@@ -2,7 +2,9 @@ import argparse
 import sys
 
 from CalcRating import CalcRating
+from GoodStudentsCalculator import GoodStudentsCalculator
 from TextDataReader import TextDataReader
+from XMLDataReader import XMLDataReader
 
 
 def get_path_from_arguments(args) -> str:
@@ -21,12 +23,22 @@ def get_path_from_arguments(args) -> str:
 def main():
     path = get_path_from_arguments(sys.argv[1:])
 
-    reader = TextDataReader()
-    students = reader.read(path)
-    print("Students: ", students)
+    if path.endswith(".xml"):
+        reader = XMLDataReader()
+        students = reader.read(path)
 
-    rating = CalcRating(students).calc()
-    print("Rating: ", rating)
+        good_students = GoodStudentsCalculator(students).calculate()
+
+        print("Students:", students)
+        print("Good students:", good_students)
+    else:
+        reader = TextDataReader()
+        students = reader.read(path)
+
+        print("Students:", students)
+
+        rating = CalcRating(students).calc()
+        print("Rating:", rating)
 
 
 if __name__ == "__main__":
